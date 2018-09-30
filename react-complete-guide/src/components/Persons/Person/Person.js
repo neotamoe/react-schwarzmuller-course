@@ -5,12 +5,24 @@ import Aux from '../../hoc/Aux';
 import PropTypes from 'prop-types';
 
 class Person extends Component {
+
+    componentDidMount () {
+        // this will focus on the first Person input
+        if(this.props.position === 0) {
+            this.inputElement.focus();
+        }
+    }
+
     render () {
         return (
             <Aux>
                 <p onClick={this.props.click}>My name is {this.props.name} and I am {this.props.age} years old!</p>
                 <p>{this.props.children}</p>
-                <input type="text" onChange={this.props.changed} value={this.props.name}/>
+                <input 
+                    ref={(input) => {this.inputElement = input}}
+                    type="text" 
+                    onChange={this.props.changed} 
+                    value={this.props.name}/>
             </Aux>
         )            
     }    
