@@ -6,10 +6,16 @@ import PropTypes from 'prop-types';
 
 class Person extends Component {
 
+    constructor(props) {
+        super(props);
+        this.inputElement = React.createRef();  // 16.3+ way to create ref
+    }
+
     componentDidMount () {
         // this will focus on the first Person input
         if(this.props.position === 0) {
-            this.inputElement.focus();
+            this.inputElement.current.focus();  // 16.3+ way to access your ref
+            // this.inputElement.focus();  // pre-16.3 way to access your ref
         }
     }
 
@@ -19,7 +25,8 @@ class Person extends Component {
                 <p onClick={this.props.click}>My name is {this.props.name} and I am {this.props.age} years old!</p>
                 <p>{this.props.children}</p>
                 <input 
-                    ref={(input) => {this.inputElement = input}}
+                    ref = {this.inputElement}  // 16.3+ way to assign ref created in constructor to an element
+                    // ref={(input) => {this.inputElement = input}}  // pre-16.3 way to designate your ref
                     type="text" 
                     onChange={this.props.changed} 
                     value={this.props.name}/>
