@@ -8,17 +8,32 @@ import React, {Component} from 'react';
 //     )
 // }
 
+// const withClass2 = (WrappedComponent, className) => {
+//     return class extends Component {
+//         render () {
+//             return (
+//                 <div className={className}>
+//                     <WrappedComponent {...this.props}/>
+//                 </div>
+//             )    
+//         }       
+//     }
+// }
+// alternate way to write this if you need a stateful component
+
 const withClass2 = (WrappedComponent, className) => {
-    return class extends Component {
-        render (props) {
+    const WithClass = class extends Component {
+        render () {
             return (
                 <div className={className}>
-                    <WrappedComponent {...this.props}/>
+                    <WrappedComponent ref={this.props.forwardedRef} {...this.props}/>
                 </div>
             )    
         }       
     }
+    return React.forwardRef((props, ref) => {
+        return <WithClass {...props} forwardedRef={ref} />
+    });
 }
-// alternate way to write this if you need a stateful component
 
 export default withClass2;
