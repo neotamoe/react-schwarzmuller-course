@@ -23,7 +23,7 @@ class Blog extends Component {
                                 activeStyle={{
                                     color: 'purple',
                                     textDecoration: 'underline'
-                                }}>Home</NavLink></li>
+                                }}>Posts</NavLink></li>
                             <li><NavLink to={{
                                 pathname: '/new-post'
                             }}>New Post</NavLink></li>
