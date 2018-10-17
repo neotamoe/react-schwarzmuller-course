@@ -10,8 +10,18 @@ class FullPost extends Component {
     
     componentDidMount() {
         console.log(this.props);
+        this.loadData();
+    }
+
+    componentDidUpdate(){
+        console.log(this.props);
+        this.loadData();        
+    }
+
+    loadData() {
         if(this.props.match.params.id){
-            if(!this.state.loadedPost || (this.state.loadedPost && this.state.loadedPost.id !== this.props.match.params.id)) {
+            // either use != or have to add plus before as this.props.match.params.id is a string
+            if(!this.state.loadedPost || (this.state.loadedPost && this.state.loadedPost.id !== +this.props.match.params.id)) {
                 axios.get('/posts/' + this.props.match.params.id)
                 .then(response => {
                     // without the above checks, it would create an infinite loop of requests
@@ -22,7 +32,7 @@ class FullPost extends Component {
     }
 
     deletePostHandler = () => {
-        axios.delete('/posts/' + this.props.id)
+        axios.delete('/posts/' + this.props.match.params.id)
             .then(response => {
                 console.log(response);
             })
