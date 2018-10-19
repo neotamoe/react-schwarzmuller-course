@@ -35,7 +35,9 @@ class Blog extends Component {
                 <Switch>
                     {this.state.auth ? <Route path="/new-post" component={NewPost}/> : null }
                     <Route path="/posts" component={Posts}/>
-                    <Redirect from="/" to="/posts" />
+                    {/* this is another way to catch any unknown route, but can't be used if you also have a "/" route like below as that will also catch all */}
+                    <Route render={()=> <h1>Not Found</h1>}/> 
+                    {/* <Redirect from="/" to="/posts" /> */}
                 </Switch>
             </div>
         );
