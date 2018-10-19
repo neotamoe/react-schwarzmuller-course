@@ -13,6 +13,8 @@ class NewPost extends Component {
     }
 
     componentDidMount() {
+        // instead of guarding switch route in Blog.js could also do a check for authentication here
+        // this.props.history.replace('/posts');
         console.log(this.props);  // example of props via routing
     }
 
