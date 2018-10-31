@@ -11,33 +11,13 @@ import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 import axios from '../../axios-orders';
 import * as actionTypes from '../../store/actions';
 
-const INGREDIENT_PRICES = {
-    salad: 0.5,
-    cheese: 0.4,
-    meat: 1.3,
-    bacon: 0.7
-};
-
 class BurgerBuilder extends Component {
 
     state = {
-        totalPrice: 4,
         purchaseable: false,
         purchasing: false,
         loading: false,
         error: false
-    }
-
-    componentDidMount() {
-        // axios.get('https://react-burger-builder-2ef88.firebaseio.com/ingredients.json')
-        //     .then(response => {
-        //         this.setState({
-        //             ingredients: response.data
-        //         });
-        //     })
-        //     .catch(error => {
-        //         this.setState({error: true})
-        //     });
     }
 
     updatePurchaseState (ingredients) {
@@ -48,44 +28,7 @@ class BurgerBuilder extends Component {
             .reduce((sum, el) => {
                 return sum + el;
             }, 0);
-        this.setState({purchaseable: sum > 0})
-    }
-
-    addIngredientHandler = (type) => {
-        const oldCount = this.state.ingredients[type];
-        const updatedCount = oldCount + 1;
-        const updatedIngredients = {
-            ...this.state.ingredients
-        };
-        updatedIngredients[type] = updatedCount;
-        const priceAdded = INGREDIENT_PRICES[type];
-        const oldPrice = this.state.totalPrice;
-        const newPrice = oldPrice + priceAdded;
-        this.setState({
-            totalPrice: newPrice,
-            ingredients: updatedIngredients
-        });
-        this.updatePurchaseState(updatedIngredients);
-    }
-
-    removeIngredientHandler = (type) => {
-        const oldCount = this.state.ingredients[type];
-        if (oldCount <= 0) {
-            return;
-        }
-        const updatedCount = oldCount - 1;
-        const updatedIngredients = {
-            ...this.state.ingredients
-        };
-        updatedIngredients[type] = updatedCount;
-        const priceReduced = INGREDIENT_PRICES[type];
-        const oldPrice = this.state.totalPrice;
-        const newPrice = oldPrice - priceReduced;
-        this.setState({
-            totalPrice: newPrice,
-            ingredients: updatedIngredients
-        });
-        this.updatePurchaseState(updatedIngredients);
+        return sum > 0;
     }
 
     purchaseHandler = () => {
@@ -98,10 +41,10 @@ class BurgerBuilder extends Component {
 
     purchaseContinueHandler = () => {
         const queryParams = [];
-        for( let i in this.state.ingredients) {
-            queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
+        for( let i in this.props.ingts) {
+            queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.props.ingts[i]));
         }
-        queryParams.push('price=' + this.state.totalPrice);
+        queryParams.push('price=' + this.props.ttlPrice);
         const queryString = queryParams.join('&');
         this.props.history.push({
             pathname: '/checkout',
@@ -129,7 +72,7 @@ class BurgerBuilder extends Component {
                 </Aux>                
             );
             orderSummary = <OrderSummary 
-                totalPrice={this.state.totalPrice}
+                totalPrice={this.props.ttlPrice}
                 ingredients={this.props.ingts}
                 purchaseContinued={this.purchaseContinueHandler}
                 purchaseCanceled={this.purchaseCancelHandler}/>;
@@ -145,12 +88,12 @@ class BurgerBuilder extends Component {
                 </Modal >
                 {burger}
                 <BuildControls 
-                    price={this.state.totalPrice}
+                    price={this.props.ttlPrice}
                     ingredientAdded={this.props.onAddIngredient}
                     ingredientRemoved={this.props.onDeleteIngredient}
                     disabled={disabledInfo}
                     ordered={this.purchaseHandler}
-                    purchaseable={this.state.purchaseable}/>
+                    purchaseable={this.updatePurchaseState(this.props.ingts)}/>
             </Aux>
         );
     }
