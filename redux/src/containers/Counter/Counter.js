@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 // Connect is a function that returns a higher order component
 import {connect} from 'react-redux';
-import * as actionCreators from '../../store/actions/actions';
+import * as actionCreators from '../../store/actions/index';
 
 import CounterControl from '../../components/CounterControl/CounterControl';
 import CounterOutput from '../../components/CounterOutput/CounterOutput';
