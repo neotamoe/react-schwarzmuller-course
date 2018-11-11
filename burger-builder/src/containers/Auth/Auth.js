@@ -58,7 +58,7 @@ class Auth extends Component {
 
     submitHandler = (event) => {
         event.preventDefault();
-        this.props.onAuth(this.state.controls.email.value, this.state.controls.email.password)
+        this.props.onAuth(this.state.controls.email.value, this.state.controls.password.value)
     }
 
     inputChangedHandler = (event, controlName) => {
@@ -90,8 +90,7 @@ class Auth extends Component {
             })
         }
         let form = (
-            <form onSubmit={this.submitHandler}>
-                {formElementsArray.map(formElement => (
+                formElementsArray.map(formElement => (
                     <Input 
                         key={formElement.id}
                         elementType={formElement.config.elementType}
@@ -101,12 +100,11 @@ class Auth extends Component {
                         shouldValidate={formElement.config.validation}
                         touched={formElement.config.touched}
                         changed={(event) => this.inputChangedHandler(event, formElement.id)}/>
-                ))}
-            </form>
+                ))
         );
         return (
             <div className={classes.Auth}>
-                <form>
+                <form onSubmit={this.submitHandler}>
                     {form}
                     <Button disabled={!this.state.formIsValid} btnType="Success" >SUBMIT</Button>
                 </form>
