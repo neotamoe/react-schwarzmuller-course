@@ -15,8 +15,7 @@ var _jsxFileName = "/Users/neotamoe/Documents/react-schwarzmuller/nextJS-intro/p
 
 
 var indexPage = function indexPage() {
-  return;
-  react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     __source: {
       fileName: _jsxFileName,
       lineNumber: 5
@@ -28,7 +27,26 @@ var indexPage = function indexPage() {
       lineNumber: 6
     },
     __self: this
-  }, "The MAIN Page"));
+  }, "The MAIN Page"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 7
+    },
+    __self: this
+  }, "Go to ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Link, {
+    href: "/auth",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 7
+    },
+    __self: this
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 7
+    },
+    __self: this
+  }, "Auth"))));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (indexPage);
@@ -55,4 +73,4 @@ var indexPage = function indexPage() {
 /***/ })
 
 })
-//# sourceMappingURL=index.js.4c634674431efb80c099.hot-update.js.map
+//# sourceMappingURL=index.js.019b1af9151fcb31ac65.hot-update.js.map
