@@ -7,7 +7,7 @@ const authIndexPage = () => {
     return (
         <div>
             <h1>The Auth Index Page</h1>
-            <User name={Violet} age={3}/>
+            <User name="Violet" age="3"/>
             <button onClick={() => Router.push('/')}>Go to Main</button>
         </div>
     )
