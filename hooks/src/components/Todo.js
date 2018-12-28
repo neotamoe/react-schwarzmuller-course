@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import axios from 'axios';
+
 const todo = props => {
     // useState returns an array with two elements, 
     // [0]: current/latest state, [1]: a reference to a function to change state
@@ -16,6 +18,13 @@ const todo = props => {
     const todoAddHandler = () => {
         // NOTE: we use concat which returns a new array
         setTodoList(todoList.concat(todoName));
+        axios.post('https://react-hooks-intro.firebaseio.com/todos.json', {name: todoName})
+            .then(result => {
+                console.log(result)
+            })
+            .catch(error => {
+                console.log(error);
+            })
     }
 
     return (
