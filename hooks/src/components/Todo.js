@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import axios from 'axios';
 
@@ -9,7 +9,23 @@ const todo = props => {
     const [todoName, setTodoName] = useState('');
 
     const [todoList, setTodoList] = useState([]);
-    
+
+    // useEffect runs after every render cycle, avoid infinite loop by using second argument
+    useEffect(()=> {
+        axios.get('https://react-hooks-intro.firebaseio.com/todos.json').then(result => {
+            console.log(result);
+            const todoData = result.data;
+            const todos = [];
+            for(const key in todoData){
+                todos.push({id: key, name: todoData[key].name})
+            }
+            setTodoList(todos);
+        });
+        return () => {
+            console.log('here is where you can do effect cleanup');
+        };
+    // }, []);  // this mimics componentDidMount and will only run this once
+    }, [todoName]);  // useEffect callback will run every time there is a change to the value passed in the second argument 
 
     const inputChangeHandler = (event) => {
         setTodoName(event.target.value)
@@ -37,7 +53,7 @@ const todo = props => {
             <button type="button" onClick={todoAddHandler}>Add</button>
             <ul>
                 {todoList.map(todo=> (
-                    <li key={todo}>{todo}</li>
+                    <li key={todo.id}>{todo.name}</li>
                 ))}
             </ul>
         </React.Fragment>
