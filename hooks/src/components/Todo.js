@@ -3,16 +3,19 @@ import React, { useState } from 'react';
 const todo = props => {
     // useState returns an array with two elements, 
     // [0]: current/latest state, [1]: a reference to a function to change state
+    // NOTE: unlike setState that merges with existing state, the useState function does not do this for you 
     const [todoName, setTodoName] = useState('');
 
     const [todoList, setTodoList] = useState([]);
     
+
     const inputChangeHandler = (event) => {
         setTodoName(event.target.value)
     };
 
     const todoAddHandler = () => {
-        setTodoList(todoList.concat(todoName))
+        // NOTE: we use concat which returns a new array
+        setTodoList(todoList.concat(todoName));
     }
 
     return (
@@ -33,3 +36,6 @@ const todo = props => {
 };
 
 export default todo;
+
+// NOTE:  must be in a component function and can only be called at 
+// root level (not nested, not within handler function, etc)
