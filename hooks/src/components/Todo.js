@@ -33,10 +33,12 @@ const todo = props => {
 
     const todoAddHandler = () => {
         // NOTE: we use concat which returns a new array
-        setTodoList(todoList.concat(todoName));
         axios.post('https://react-hooks-intro.firebaseio.com/todos.json', {name: todoName})
             .then(result => {
                 console.log(result)
+                const todoItem = {id: result.data.name, name: todoName}
+                setTodoList(todoList.concat(todoItem));
+
             })
             .catch(error => {
                 console.log(error);
