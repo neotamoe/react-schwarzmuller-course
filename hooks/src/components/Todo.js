@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 
 import axios from 'axios';
 
@@ -7,8 +7,22 @@ const todo = props => {
     // [0]: current/latest state, [1]: a reference to a function to change state
     // NOTE: unlike setState that merges with existing state, the useState function does not do this for you 
     const [todoName, setTodoName] = useState('');
+    // const [todoList, setTodoList] = useState([]);
 
-    const [todoList, setTodoList] = useState([]);
+    const todoListReducer = (state, action) => {
+        switch(action.type) {
+            case 'ADD':
+                return state.concat(action.payload);
+            case 'SET':
+                return action.payload;
+            case 'REMOVE': 
+                return state.filter((todo) => todo.id !== action.payload);
+            default:
+                return state;
+        }
+    };
+
+    const [todoList, dispatch] = useReducer(todoListReducer, []);
 
     // useEffect runs after every render cycle, avoid infinite loop by using second argument
     useEffect(()=> {
@@ -19,7 +33,8 @@ const todo = props => {
             for(const key in todoData){
                 todos.push({id: key, name: todoData[key].name})
             }
-            setTodoList(todos);
+            // setTodoList(todos);
+            dispatch({type: 'SET', payload: todos})
         });
         return () => {
             console.log('here is where you can do effect cleanup');
@@ -35,14 +50,25 @@ const todo = props => {
         // NOTE: we use concat which returns a new array
         axios.post('https://react-hooks-intro.firebaseio.com/todos.json', {name: todoName})
             .then(result => {
-                console.log(result)
-                const todoItem = {id: result.data.name, name: todoName}
-                setTodoList(todoList.concat(todoItem));
+                setTimeout(() => {
+                    console.log(result)
+                    const todoItem = {id: result.data.name, name: todoName}
+                    dispatch({type: 'ADD', payload: todoItem})
+                    // setTodoList(todoList.concat(todoItem));
+    
+                },3000)
 
             })
             .catch(error => {
                 console.log(error);
             })
+    }
+
+    const todoRemoveHandler = todoId => {
+        axios.delete(`https://react-hooks-intro.firebaseio.com/todos/${todoId}.json`).then().catch(error => console.log(error))
+        .then(response => {
+            dispatch({type: 'REMOVE', payload: todoId})            
+        })
     }
 
     return (
@@ -55,7 +81,9 @@ const todo = props => {
             <button type="button" onClick={todoAddHandler}>Add</button>
             <ul>
                 {todoList.map(todo=> (
-                    <li key={todo.id}>{todo.name}</li>
+                    <li 
+                        key={todo.id}
+                        onClick={todoRemoveHandler.bind(this, todo.id)}>{todo.name}</li>
                 ))}
             </ul>
         </React.Fragment>
