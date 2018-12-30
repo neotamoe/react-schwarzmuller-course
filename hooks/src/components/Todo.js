@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useEffect, useReducer, useRef } from 'react';
 
 import axios from 'axios';
 
@@ -6,8 +6,9 @@ const todo = props => {
     // useState returns an array with two elements, 
     // [0]: current/latest state, [1]: a reference to a function to change state
     // NOTE: unlike setState that merges with existing state, the useState function does not do this for you 
-    const [todoName, setTodoName] = useState('');
+    // const [todoName, setTodoName] = useState('');
     // const [todoList, setTodoList] = useState([]);
+    const todoInputRef = useRef();
 
     const todoListReducer = (state, action) => {
         switch(action.type) {
@@ -39,14 +40,15 @@ const todo = props => {
         return () => {
             console.log('here is where you can do effect cleanup');
         };
-    // }, []);  // this mimics componentDidMount and will only run this once
-    }, [todoName]);  // useEffect callback will run every time there is a change to the value passed in the second argument 
+    }, []);  // this mimics componentDidMount and will only run this once
+    // }, [todoName]);  // useEffect callback will run every time there is a change to the value passed in the second argument 
 
-    const inputChangeHandler = (event) => {
-        setTodoName(event.target.value)
-    };
+    // const inputChangeHandler = (event) => {
+    //     setTodoName(event.target.value)
+    // };
 
     const todoAddHandler = () => {
+        const todoName = todoInputRef .current.value;
         // NOTE: we use concat which returns a new array
         axios.post('https://react-hooks-intro.firebaseio.com/todos.json', {name: todoName})
             .then(result => {
@@ -76,8 +78,10 @@ const todo = props => {
             <input 
                 type="text" 
                 placeholder="To Do"
-                onChange={inputChangeHandler}
-                value={todoName} />
+                // onChange={inputChangeHandler}
+                // value={todoName}
+                ref={todoInputRef}
+                 />
             <button type="button" onClick={todoAddHandler}>Add</button>
             <ul>
                 {todoList.map(todo=> (
