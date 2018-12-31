@@ -3,6 +3,7 @@ import React, { useState, useEffect, useReducer, useRef, useMemo } from 'react';
 import axios from 'axios';
 
 import List from './List';
+import { useFormInput } from '../hooks/forms';
 
 const todo = props => {
     // useState returns an array with two elements, 
@@ -10,8 +11,9 @@ const todo = props => {
     // NOTE: unlike setState that merges with existing state, the useState function does not do this for you 
     // const [todoName, setTodoName] = useState('');
     // const [todoList, setTodoList] = useState([]);
-    const todoInputRef = useRef();
+    // const todoInputRef = useRef();
     const [inputIsValid, setInputIsValid] = useState(false);
+    const todoInput = useFormInput();
 
     const todoListReducer = (state, action) => {
         switch(action.type) {
@@ -51,22 +53,29 @@ const todo = props => {
     // };
 
     const todoAddHandler = () => {
-        const todoName = todoInputRef .current.value;
-        // NOTE: we use concat which returns a new array
-        axios.post('https://react-hooks-intro.firebaseio.com/todos.json', {name: todoName})
-            .then(result => {
-                setTimeout(() => {
-                    console.log(result)
-                    const todoItem = {id: result.data.name, name: todoName}
-                    dispatch({type: 'ADD', payload: todoItem})
-                    // setTodoList(todoList.concat(todoItem));
-    
-                },3000)
+        // for when using useRef
+        // const todoName = todoInputRef.current.value;
+        // for when using custom hook useFormInput
+        const todoName = todoInput.value;
+        if(todoInput.validity){
+            // NOTE: we use concat which returns a new array
+            axios.post('https://react-hooks-intro.firebaseio.com/todos.json', {name: todoName})
+                .then(result => {
+                    setTimeout(() => {
+                        console.log(result)
+                        const todoItem = {id: result.data.name, name: todoName}
+                        dispatch({type: 'ADD', payload: todoItem})
+                        // setTodoList(todoList.concat(todoItem));
+        
+                    },3000)
 
-            })
-            .catch(error => {
-                console.log(error);
-            })
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        } else {
+            return;
+        }
     }
 
     const todoRemoveHandler = todoId => {
@@ -92,9 +101,13 @@ const todo = props => {
                 // commented out to use useRef instead
                 // onChange={inputChangeHandler}
                 // value={todoName}
-                ref={todoInputRef}
-                onChange={inputValidationHandler}
-                style={{backgroundColor: inputIsValid ? 'transparent' : 'red'}}
+                // commented out to use custom hook
+                // ref={todoInputRef}
+                // onChange={inputValidationHandler}
+                onChange={todoInput.onChange}
+                value={todoInput.value}
+                // style={{backgroundColor: inputIsValid ? 'transparent' : 'red'}}
+                style={{backgroundColor: todoInput.validity === true ? 'transparent' : 'red'}}
                  />
             <button type="button" onClick={todoAddHandler}>Add</button>
             {useMemo(()=> (
