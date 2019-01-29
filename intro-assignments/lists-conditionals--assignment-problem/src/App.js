@@ -18,9 +18,13 @@ class App extends Component {
   deleteChar = (idx) => {
     console.log(idx)
     let inputCopy = [...this.state.inputText]
-    let removed = inputCopy.splice(idx,1);
-    inputCopy = inputCopy.join('')
-    this.setState({inputText: inputCopy})
+    inputCopy.splice(idx,1);
+    inputCopy = inputCopy.join('');
+    let newInputLength = inputCopy.length;
+    this.setState({
+      inputText: inputCopy,
+      inputLength: newInputLength
+    })
   }
 
   render() {
